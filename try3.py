@@ -1,24 +1,42 @@
 import copy
-currentPrime = 0
-primes = []
+currentPrime = 2
+primes = {}
+primes2 = set()
 
 def generatePrimesUpTo(max):
-    global primes 
-    primes = []
-    primes.append(2)
+    global primes, primes2
+    tempPrimes = []
+    primes = {}
+    primes[2] = 3
+    oldP = 3
     pool = set(range(3,max,2))
     while pool:
         p = pool.pop()
-        primes.append(p)
+        tempPrimes.append(p)
         pool.difference_update(set(range(p*2, max + 1, p)))
-    primes.sort()
-    primes.reverse()
+    tempPrimes.sort()
+    tempPrimes.reverse()
+    prev = 2
+    while tempPrimes:
+        popped = tempPrimes.pop()
+        primes[prev] = popped
+        #print(prev," ", popped)
+        prev = popped
+    for i in primes:
+        primes2.add(i)
 
-def nextPrime():
+
+
+def nextPrime(num):
     global currentPrime
     global primes
-    currentPrime = primes.pop()
+    return primes[num]
     
+def nextPrimeFrom():
+    global currentPrime
+    while(not isPrime(currentPrime)):
+        currentPrime+=1
+
 
 
 """ a better way of checking if a number is prime"""
@@ -44,7 +62,7 @@ def generateChoices(digits):
     listOfBinaryLists = []
 
     # There are 2 ^ digits possibilities.
-    for number in range(1, int((2**digits)/2)):
+    for number in range(1, int((2**digits))):
         binNum = list(str(bin(number)))
 
         holder = []
@@ -66,6 +84,8 @@ def strListToInt(strList):
 def hasFamily(number):
     global primes
 
+    familyMembers = 8
+
     currentNumber = intToStrList(number)
     length = len(currentNumber)
     configs = generateChoices(length)
@@ -74,9 +94,11 @@ def hasFamily(number):
     for setting in configs:
         # create list of positions 
         positions = []
+
+        passed = []
         count = 0
         strikes = 0
-        #print(setting)
+       # print(setting)
 
         for x in range(0,len(setting)):
          #   #print("Hello")
@@ -84,8 +106,26 @@ def hasFamily(number):
               #  #print("Trued")
                 positions.append(str(x))
 
-        for change in range(0,10):
+
+        change = 10
+ #grab the lowest digit and start change from there
+        temp = copy.deepcopy(currentNumber)
+        for digit in range(0, length):
+            if str(digit) in positions:
+                if change > int(temp[digit]):
+                    change = int(temp[digit])
+
+
+
+      #  for change in range(0,10):
+        change -= 1
+        while change < 10:
+            change += 1
+            
            # #print (change)
+            
+           
+        
             temp = copy.deepcopy(currentNumber)
             
 
@@ -96,30 +136,40 @@ def hasFamily(number):
             check = strListToInt(temp)
             #print ("Check: ", check)
           #  #print ("Chec2: ", currentNumber)
-            if check in primes:
+            if check in primes2 and check > currentPrime:
                 count += 1
-                #print("Is Prime, count ",count)
-                if count == 8:
+                passed.append(check)
+            #    print("Is Prime, count ",count)
+                if count == familyMembers:
                     print(setting)
+                    for x in passed:
+                        print (x)
                     return True
-            else:
-                strikes += 1
-                if strikes == 3:
-                    #print("oops")
-                    break
+            #else:
+                #strikes += 1
+               # if strikes > 10 - familyMembers:
+              #      print("oops")
+             #       break
     return False
 
 
+nextPrimeFrom()
+generatePrimesUpTo(100000000)
 
-generatePrimesUpTo(5000000)
-i = 0
+founded = 0
 while( True):
 
-    nextPrime()
-    
-    if i % 10000 == 0: 
-        print( "Current Prime: ", currentPrime)
+
+    currentPrime = primes[currentPrime]
+    #print("\n")
     if hasFamily(currentPrime):
         print("FOUND: ", currentPrime)
-        break
-    i+=1
+        print("\n")
+        founded += 1
+        if founded == 3:
+            break;
+        
+
+
+
+   

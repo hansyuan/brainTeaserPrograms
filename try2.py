@@ -64,8 +64,6 @@ def strListToInt(strList):
     return int("".join(strList))
 
 def hasFamily(number):
-    global primes
-
     currentNumber = intToStrList(number)
     length = len(currentNumber)
     configs = generateChoices(length)
@@ -96,30 +94,30 @@ def hasFamily(number):
             check = strListToInt(temp)
             #print ("Check: ", check)
           #  #print ("Chec2: ", currentNumber)
-            if check in primes:
+            if(isPrime(check)):
                 count += 1
                 #print("Is Prime, count ",count)
-                if count == 8:
+                if count == 7:
                     print(setting)
                     return True
             else:
                 strikes += 1
-                if strikes == 3:
+                if strikes == 4:
                     #print("oops")
                     break
     return False
 
 
 
-generatePrimesUpTo(5000000)
+generatePrimesUpTo(2000000)
 i = 0
 while( True):
 
     nextPrime()
-    
+    i+=1
     if i % 10000 == 0: 
         print( "Current Prime: ", currentPrime)
     if hasFamily(currentPrime):
         print("FOUND: ", currentPrime)
         break
-    i+=1
+
