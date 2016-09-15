@@ -1,2 +1,2 @@
-# brainTeaserPrograms
-Random snippets of code to test probabilities/brainteasers out using randomness
+# Project Euler work
+My work on project euler problems and the occasional other codelings for curiosity 
