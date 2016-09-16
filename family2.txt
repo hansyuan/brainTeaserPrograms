@@ -1,2 +1,0 @@
-Current Prime and Length:  97 2
-Position and changeLength:  0 1
